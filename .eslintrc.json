@@ -1,0 +1,10 @@
+{
+  "extends": "brightspace/node-config",
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module"
+  },
+	"globals": {
+    "window": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "d2l-perf-runner",
+  "private": true,
+  "description": "Runner for client-side performance measurements",
+  "scripts": {
+    "test": "npm run test:lint",
+    "test:lint": "eslint *.js"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "chalk": "^2.3.2",
+    "eslint-plugin-html": "^4.0.2",
+    "mathjs": "^4.0.0",
+    "puppeteer": "^1.1.1",
+    "yargs": "^11.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.18.2",
+    "eslint-config-brightspace": "^0.4.0"
+  }
+}
