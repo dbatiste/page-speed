@@ -4,7 +4,7 @@ const chalk = require('chalk');
 const loginHelper = {
 
 	login: async(page, userName, password) => {
-		process.stdout.write('Logging in... ');
+		process.stdout.write('\nLogging in... ');
 		await page.type('#userName', userName);
 		await page.type('#password', password);
 		//const [response] =

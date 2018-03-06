@@ -3,7 +3,7 @@
   "headless": "false",
   "times": 15,
   "pages": [
-    "https://some-domain.com/d2l/lms/news/main.d2l?ou=6606",
-    "https://some-domain.com/d2l/le/content/6606/Home"
+    "https://polymertest.devlms.brightspace.com/d2l/lms/news/main.d2l?ou=6606",
+    "https://polymertest.devlms.brightspace.com/d2l/le/content/6606/Home"
   ]
 }

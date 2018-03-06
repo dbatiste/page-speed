@@ -10,28 +10,52 @@ const measure = async(page, url, options) => {
 		options.times = 15;
 	}
 
-	const reportTimings = (timings) => {
+	const getTimingNames = (timings) => {
+		const names = [];
+		if (timings.length > 0) {
+			for (var timingName in timings[0]) {
+				if (timings[0].hasOwnProperty(timingName)) {
+					names.push(timingName);
+				}
+			}
+		}
+		return names;
+	};
 
-		timings = timings.map(timing => timing['d2l.page.display']);
+	const reportTiming = (name, timings) => {
+
+		timings = timings.map(timing => timing[name]);
 
 		const std = math.std(timings);
 		const mean = math.mean(timings);
 		const keep = [];
 
+		process.stdout.write(`Times for ${chalk.green(name)}: `);
 		for (let i = 0; i < timings.length; i++) {
 			if (math.abs(timings[i] - mean) > std * 2) {
-				process.stdout.write(`d2l.page.display: ${chalk.gray(Math.round(timings[i]) + 'ms')}\n`);
+				process.stdout.write(`${chalk.gray(Math.round(timings[i]) + 'ms')} `);
 			} else {
-				process.stdout.write(`d2l.page.display: ${Math.round(timings[i])}ms\n`);
+				process.stdout.write(`${Math.round(timings[i])}ms `);
 				keep.push(timings[i]);
 			}
 		}
 
 		const meanStd = math.mean(keep);
 
-		process.stdout.write(`\n${chalk.green('std')}: ${Math.round(std)}ms\n`);
+		process.stdout.write(`\n\n${chalk.green('std')}: ${Math.round(std)}ms\n`);
 		process.stdout.write(`${chalk.green('mean')}: ${Math.round(mean)}ms\n`);
 		process.stdout.write(`${chalk.green('mean(std)')}: ${Math.round(meanStd)}ms\n\n`);
+
+	};
+
+	const reportTimings = (timings) => {
+
+		const timingNames = getTimingNames(timings);
+		for (let i=0; i<timingNames.length; i++) {
+			reportTiming(timingNames[i], timings);
+		}
+
+		process.stdout.write(`\n`);
 
 	};
 
@@ -44,12 +68,11 @@ const measure = async(page, url, options) => {
 			await login.login(page, options.user, options.pwd);
 		} else {
 			if (!measuringLogged) {
-				process.stdout.write(`Measuring... ${chalk.green(url)}\n`);
+				process.stdout.write(`Measuring... ${chalk.blue(url)}\n\n`);
 				measuringLogged = true;
 			}
 			const timing = await page.evaluate(() => {
 				return {
-					'd2l.page.display': window.performance.getEntriesByName('d2l.page.display')[0].duration,
 					'first-paint': window.performance.getEntriesByName('first-paint')[0].startTime,
 					'first-contentful-paint': window.performance.getEntriesByName('first-contentful-paint')[0].startTime
 				};
