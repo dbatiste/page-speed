@@ -44,8 +44,8 @@ const processor = {
 			results[name] = Math.round(meanStd);
 			//results[name + '-std'] = Math.round(std);
 
-			process.stdout.write(`\n\n${chalk.green('std')}: ${Math.round(std)}ms\n`);
-			process.stdout.write(`${chalk.green('mean')}: ${Math.round(mean)}ms\n`);
+			process.stdout.write(`\n${chalk.green('std')}: ${Math.round(std)}ms; `);
+			process.stdout.write(`${chalk.green('mean')}: ${Math.round(mean)}ms; `);
 			process.stdout.write(`${chalk.green('mean(std)')}: ${Math.round(meanStd)}ms\n\n`);
 
 		};

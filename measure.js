@@ -24,7 +24,7 @@ const measure = async(page, url, options) => {
 		} else {
 
 			if (!measuringLogged) {
-				process.stdout.write(`Measuring... ${chalk.blue(url)}\n\n`);
+				process.stdout.write(`Measuring... ${chalk.blue(url)}\n`);
 				measuringLogged = true;
 			}
 
@@ -32,6 +32,8 @@ const measure = async(page, url, options) => {
 				ignoreMeasurement = false;
 				continue;
 			}
+
+			process.stdout.write(`.`);
 
 			const measurement = await page.evaluate(async() => {
 
@@ -57,6 +59,8 @@ const measure = async(page, url, options) => {
 
 		}
 	}
+
+	process.stdout.write(`\n\n`);
 
 	return measurements;
 
