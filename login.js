@@ -9,8 +9,8 @@ const loginHelper = {
 		await page.type('#password', password);
 		//const [response] =
 		await Promise.all([
-			page.waitForNavigation({waitUntil: 'networkidle2'}),
-			page.click('.d2l-button[primary]')
+			page.click('.d2l-button[primary]'),
+			page.waitForNavigation({waitUntil: 'networkidle2'})
 		]);
 
 		process.stdout.write(chalk.green('success!\n\n'));

@@ -1,9 +1,20 @@
 {
   "caching": "true",
   "headless": "false",
-  "times": 15,
-  "pages": [
-    "https://polymertest.devlms.brightspace.com/d2l/lms/news/main.d2l?ou=6606",
-    "https://polymertest.devlms.brightspace.com/d2l/le/content/6606/Home"
+  "times": 20,
+  "targetSite":"https://polymertest.devlms.brightspace.com",
+  "targets": [
+    {
+      "name": "announcements",
+      "url": "/d2l/lms/news/main.d2l?ou=6606"
+    },
+    {
+      "name": "content",
+      "url": "/d2l/le/content/6606/Home"
+    },
+    {
+      "name": "course-home-banner",
+      "url": "/d2l/home/6609"
+    }
   ]
 }
