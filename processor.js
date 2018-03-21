@@ -7,7 +7,7 @@ const processor = {
 
 	evaluate: (measurements) => {
 
-		const results = {};
+		const results = [];
 
 		const getMeasureNames = (measurements) => {
 			const names = [];
@@ -41,8 +41,8 @@ const processor = {
 
 			const meanStd = math.mean(keep);
 
-			results[name] = Math.round(meanStd);
-			//results[name + '-std'] = Math.round(std);
+			//results[name] = Math.round(meanStd);
+			results.push({name: name, value: Math.round(meanStd)});
 
 			process.stdout.write(`\n${chalk.green('std')}: ${Math.round(std)}ms; `);
 			process.stdout.write(`${chalk.green('mean')}: ${Math.round(mean)}ms; `);

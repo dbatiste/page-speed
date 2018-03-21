@@ -1,6 +1,7 @@
 
 const puppeteer = require('puppeteer');
 const measure = require('./measure.js');
+const getProperties = require('./properties.js');
 const processor = require('./processor.js');
 const helpers = require('./helpers.js');
 const fs = require('fs');
@@ -9,6 +10,8 @@ const argv = require('yargs')
 	.usage('Usage: $0 --user=[user] --pwd=[password] --headless[bool] --times=[num]')
 	.option('user', {describe: 'Username to login'})
 	.option('pwd', {describe: 'Password to login'})
+	.option('properties', {array: true, describe: 'Properties to extract from targets'})
+	.option('measurements', {array: true, describe: 'Measurements to extract from targets'})
 	.option('targetSite', {describe: 'Target site to measure targets'})
 	.option('targets', {array: true, describe: 'Targets to measure'})
 	.option('caching', {default: true, boolean: true, describe: 'Whether to enable caching'})
@@ -36,18 +39,17 @@ const filePath = 'data/' + helpers.getTimestamp('-', '.') + '.json';
 
 	for (let i = 0; i < targets.length; i++) {
 
-		const measurements = await measure(page, argv.targetSite + targets[i].url, options);
+		let result = await measure(page, argv.targetSite + targets[i].url, argv.measurements, options);
 
-		const polymerVersion = await helpers.getPolymerVersion(page);
-		const result = {
+		result = helpers.merge({
+			'application-key': argv.applicationKey,
 			'target-site': argv.targetSite,
 			'target-url': targets[i].url,
 			'target-name': targets[i].name,
-			caching: argv.caching,
-			polymer: polymerVersion,
-			timestamp: helpers.getTimestamp()
-		};
-		helpers.merge(result, processor.evaluate(measurements));
+			'properties': await getProperties(page, argv.targetSite + targets[i].url, argv.properties, options)
+		}, result);
+
+		result.measurements = processor.evaluate(result.measurements);
 		fs.appendFileSync(filePath, JSON.stringify(result) + '\n');
 		//await page.screenshot({path: i + '.png'});
 	}

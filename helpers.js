@@ -21,19 +21,13 @@ const helper = {
 			+ milliseconds;
 	},
 
-	getPolymerVersion: async(page) => {
-		const version = await page.evaluate(() => {
-			return Polymer.version;
-		});
-		return version;
-	},
-
 	merge: (objA, objB) => {
 		for (let key in objB) {
 			if (objB.hasOwnProperty(key)) {
 				objA[key] = objB[key];
 			}
 		}
+		return objA;
 	}
 
 };

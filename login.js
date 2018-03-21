@@ -7,7 +7,6 @@ const loginHelper = {
 		process.stdout.write('\nLogging in... ');
 		await page.type('#userName', userName);
 		await page.type('#password', password);
-		//const [response] =
 		await Promise.all([
 			page.click('.d2l-button[primary]'),
 			page.waitForNavigation({waitUntil: 'networkidle2'})
