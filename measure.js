@@ -4,26 +4,57 @@ const login = require('./login.js');
 const helpers = require('./helpers.js');
 
 const builtinProviders = {
+
 	'first-paint': () => {
 		return window.performance.getEntriesByName('first-paint')[0].startTime;
 	},
 	'first-contentful-paint': () => {
 		return window.performance.getEntriesByName('first-contentful-paint')[0].startTime;
 	},
-	'd2l.page.*': async() => {
-		const pageMeasures = window.performance.getEntries({ "entryType": "measure"});
+	'tti': async() => {
+		return await ttiPolyfill.getFirstConsistentlyInteractive();
+	},
+
+	'generic-pattern': async(pattern) => {
+		pattern = pattern.substr(0, pattern.length - 1);
+		const entries = window.performance.getEntries({ "entryType": "measure"});
 		const result = {};
-		for (let i = 0; i < pageMeasures.length; i++) {
-			if (pageMeasures[i].name.startsWith('d2l.page.')) {
-				result[pageMeasures[i].name] = pageMeasures[i].duration
+		for (let i = 0; i < entries.length; i++) {
+			if (entries[i].name.startsWith(pattern)) {
+				result[entries[i].name] = entries[i].duration
 			}
 		}
-		result['d2l.page.tti'] = await ttiPolyfill.getFirstConsistentlyInteractive();
 		return result;
 	},
-	'd2l.page.tti': async() => {
-		return await ttiPolyfill.getFirstConsistentlyInteractive();
+
+	'generic': async(key) => {
+
+		if (!key) {
+			return null;
+		}
+
+		const entries = window.performance.getEntriesByName(key);
+		if (entries && entries.length > 0) {
+			return entries[0].duration;
+		}
+
+		const entryPromise = new Promise(function(resolve, reject) {
+			setTimeout(() => {
+				//maybe reject instead
+				resolve(null);
+			}, 10000);
+			const observer = new PerformanceObserver((list, observer) => {
+				const entries = list.getEntriesByName(key);
+				if (entries && entries.length > 0) {
+					resolve(entries[0].duration);
+				}
+			});
+			observer.observe({entryTypes: ["measure"]});
+		});
+
+		return entryPromise;
 	}
+
 };
 
 const getProviders = (keys) => {
@@ -32,6 +63,10 @@ const getProviders = (keys) => {
 		for(let i=0; i<keys.length; i++) {
 			if (builtinProviders[keys[i]]) {
 				providers.push({key: keys[i], provider: builtinProviders[keys[i]]});
+			} else if (keys[i].endsWith('*')) {
+				providers.push({key: keys[i], provider: builtinProviders['generic-pattern']});
+			} else {
+				providers.push({key: keys[i], provider: builtinProviders['generic']});
 			}
 		}
 	}
@@ -45,13 +80,15 @@ const getMeasurements = async(page, keys) => {
 
 	if (providers && providers.length > 0) {
 		for(let i=0; i<providers.length; i++) {
-			const value = await page.evaluate(providers[i].provider);
+			const value = await page.evaluate(providers[i].provider, providers[i].key);
+			if (value === null) {
+				continue;
+			}
 			if (typeof value === 'object') {
 				measurements = helpers.merge(measurements, value);
 			} else {
 				measurements[providers[i].key] = value;
 			}
-
 		}
 	}
 

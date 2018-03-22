@@ -32,10 +32,13 @@ const targets = argv.targets;
 const filePath = 'data/' + helpers.getTimestamp('-', '.') + '.json';
 
 (async() => {
+	process.stdout.write(`\nLaunching browser... `);
 	const browser = await puppeteer.launch({headless: argv.headless});
 	const page = await browser.newPage();
 	await page.setCacheEnabled(argv.caching);
 	await page.setViewport({width: 1024, height: 768});
+
+	process.stdout.write(await browser.version());
 
 	for (let i = 0; i < targets.length; i++) {
 
@@ -51,7 +54,7 @@ const filePath = 'data/' + helpers.getTimestamp('-', '.') + '.json';
 
 		result.measurements = processor.evaluate(result.measurements);
 		fs.appendFileSync(filePath, JSON.stringify(result) + '\n');
-		//await page.screenshot({path: i + '.png'});
+
 	}
 
 	await browser.close();
