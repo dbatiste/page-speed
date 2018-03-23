@@ -41,12 +41,12 @@ to produce some metrics in JSON format for each target like this:
   "target-site":"https://yourapp.com",
   "target-url":"/some-relative-url-1",
   "target-name":"target1",
+  "caching":true,
+  "timestamp":"2018-03-23 15:47:56.182",
   "properties":[
     {"name":"app-version","value":"10.8.1"},
     {"name":"polymer","value":"2.5.0"}
   ],
-  "caching":true,
-  "timestamp":"2018-03-23 15:47:56.182",
   "measurements":[
     {"name":"first-paint","value":940},
     {"name":"first-contentful-paint","value":940}
