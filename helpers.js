@@ -1,6 +1,16 @@
 
 const helper = {
 
+	getConfigValue: (first, second, defaultValue) => {
+		if (first !== undefined) {
+			return first;
+		} else if (second !== undefined) {
+			return second;
+		} else {
+			return defaultValue;
+		}
+	},
+
 	getTimestamp: (dateDelim, timeDelim) => {
 		dateDelim = dateDelim ? dateDelim : '-';
 		timeDelim = timeDelim ? timeDelim : ':';

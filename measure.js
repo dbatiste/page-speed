@@ -16,14 +16,18 @@ const builtinProviders = {
 	},
 
 	'generic-pattern': async(pattern) => {
+
 		pattern = pattern.substr(0, pattern.length - 1);
+
 		const entries = window.performance.getEntries({ "entryType": "measure"});
 		const result = {};
+
 		for (let i = 0; i < entries.length; i++) {
 			if (entries[i].name.startsWith(pattern)) {
 				result[entries[i].name] = entries[i].duration
 			}
 		}
+
 		return result;
 	},
 
@@ -96,29 +100,24 @@ const getMeasurements = async(page, keys) => {
 
 };
 
-const measure = async(page, url, keys, options) => {
-
-	if (!options) options = {};
-	if (!options.times) {
-		options.times = 15;
-	}
+const measure = async(page, url, keys, config) => {
 
 	let measuringLogged = false;
-	let ignoreMeasurement = options.caching;
+	let ignoreMeasurement = config.caching;
 
 	const result = {
-		caching: options.caching,
+		caching: config.caching,
 		timestamp: helpers.getTimestamp(),
 		measurements: []
 	};
 
-	while (result.measurements.length <= options.times - 1) {
+	while (result.measurements.length <= config.samplesPerTarget - 1) {
 
 		await page.goto(url, {waitUntil: ['networkidle2', 'load']});
 
 		if (login.isLoginPage(page.url())) {
 
-			await login.login(page, options.user, options.pwd);
+			await login.login(page, config.user, config.pwd);
 
 		} else {
 

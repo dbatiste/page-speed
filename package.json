@@ -2,6 +2,9 @@
   "name": "d2l-perf-runner",
   "private": true,
   "description": "Runner for client-side performance measurements",
+  "bin": {
+    "measure": "./index.js"
+  },
   "scripts": {
     "test": "npm run test:lint",
     "test:lint": "eslint *.js"
@@ -19,4 +22,3 @@
     "eslint-config-brightspace": "^0.4.0"
   }
 }
- 

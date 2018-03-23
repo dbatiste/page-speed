@@ -2,7 +2,7 @@
   "applicationKey": "lms",
   "caching": "true",
   "headless": "false",
-  "times": 3,
+  "samplesPerTarget": 3,
   "measurements": ["first-paint", "first-contentful-paint", "tti", "d2l.page.*"],
   "properties": ["app-version", "polymer"],
   "targetSite":"https://polymertest.devlms.brightspace.com",

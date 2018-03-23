@@ -10,11 +10,11 @@ const builtinProviders = {
 	}
 };
 
-const getProperty = async(page, url, provider, options) => {
+const getProperty = async(page, url, provider, config) => {
 	if (page.url() !== url) {
 			await page.goto(url, {waitUntil: ['networkidle2', 'load']});
 			if (login.isLoginPage(page.url())) {
-					await login.login(page, options.user, options.pwd);
+					await login.login(page, config.user, config.pwd);
 					await page.goto(url, {waitUntil: ['networkidle2', 'load']});
 			}
 	}
@@ -33,7 +33,7 @@ const getProviders = (keys) => {
 	return providers;
 };
 
-const getProperties = async(page, url, keys, options) => {
+const getProperties = async(page, url, keys, config) => {
 	const providers = getProviders(keys);
 	const properties = [];
 	if (providers && providers.length > 0) {
@@ -41,7 +41,7 @@ const getProperties = async(page, url, keys, options) => {
 		for(let i=0; i<providers.length; i++) {
 			const property = {
 				name: providers[i].key,
-				value: await getProperty(page, url, providers[i].provider, options)
+				value: await getProperty(page, url, providers[i].provider, config)
 			};
 			process.stdout.write(`${property.name}: ${property.value}; `);
 			properties.push(property);
