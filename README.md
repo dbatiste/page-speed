@@ -29,12 +29,12 @@ module.exports = {
 };
 ```
 
-Run it...
+Run it like this...
 ```shell
 measure --user some-user --pwd some-password --configjs perf.config.js
 ```
 
-To produce some metrics in JSON format for each target like this:
+to produce some metrics in JSON format for each target like this:
 ```json
 {
   "application-key":"your-friendly-app",
