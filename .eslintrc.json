@@ -4,7 +4,11 @@
     "ecmaVersion": 8,
     "sourceType": "module"
   },
-	"globals": {
-    "window": false
+  "globals": {
+    "window": false,
+    "document": false,
+    "Polymer": false,
+    "ttiPolyfill": false,
+    "PerformanceObserver": false
   }
 }

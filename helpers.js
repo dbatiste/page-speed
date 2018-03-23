@@ -32,7 +32,7 @@ const helper = {
 	},
 
 	merge: (objA, objB) => {
-		for (let key in objB) {
+		for (const key in objB) {
 			if (objB.hasOwnProperty(key)) {
 				objA[key] = objB[key];
 			}

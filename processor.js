@@ -1,5 +1,4 @@
 
-const fs = require('fs');
 const chalk = require('chalk');
 const math = require('mathjs');
 
@@ -12,7 +11,7 @@ const processor = {
 		const getMeasureNames = (measurements) => {
 			const names = [];
 			if (measurements.length > 0) {
-				for (let measureName in measurements[0]) {
+				for (const measureName in measurements[0]) {
 					if (measurements[0].hasOwnProperty(measureName)) {
 						names.push(measureName);
 					}
@@ -55,7 +54,7 @@ const processor = {
 			getMeasurement(measureNames[i], measurements);
 		}
 
-		process.stdout.write(`\n`);
+		process.stdout.write('\n');
 
 		return results;
 

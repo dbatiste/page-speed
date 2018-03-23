@@ -19,12 +19,12 @@ const builtinProviders = {
 
 		pattern = pattern.substr(0, pattern.length - 1);
 
-		const entries = window.performance.getEntries({ "entryType": "measure"});
+		const entries = window.performance.getEntries({ 'entryType': 'measure'});
 		const result = {};
 
 		for (let i = 0; i < entries.length; i++) {
 			if (entries[i].name.startsWith(pattern)) {
-				result[entries[i].name] = entries[i].duration
+				result[entries[i].name] = entries[i].duration;
 			}
 		}
 
@@ -42,18 +42,18 @@ const builtinProviders = {
 			return entries[0].duration;
 		}
 
-		const entryPromise = new Promise(function(resolve, reject) {
+		const entryPromise = new Promise(function(resolve) {
 			setTimeout(() => {
 				//maybe reject instead
 				resolve(null);
 			}, 10000);
-			const observer = new PerformanceObserver((list, observer) => {
+			const observer = new PerformanceObserver((list) => {
 				const entries = list.getEntriesByName(key);
 				if (entries && entries.length > 0) {
 					resolve(entries[0].duration);
 				}
 			});
-			observer.observe({entryTypes: ["measure"]});
+			observer.observe({entryTypes: ['measure']});
 		});
 
 		return entryPromise;
@@ -64,7 +64,7 @@ const builtinProviders = {
 const getProviders = (keys) => {
 	const providers = [];
 	if (keys) {
-		for(let i=0; i<keys.length; i++) {
+		for (let i = 0; i < keys.length; i++) {
 			if (builtinProviders[keys[i]]) {
 				providers.push({key: keys[i], provider: builtinProviders[keys[i]]});
 			} else if (keys[i].endsWith('*')) {
@@ -83,7 +83,7 @@ const getMeasurements = async(page, keys) => {
 	let measurements = {};
 
 	if (providers && providers.length > 0) {
-		for(let i=0; i<providers.length; i++) {
+		for (let i = 0; i < providers.length; i++) {
 			const value = await page.evaluate(providers[i].provider, providers[i].key);
 			if (value === null) {
 				continue;
@@ -131,14 +131,14 @@ const measure = async(page, url, keys, config) => {
 				continue;
 			}
 
-			process.stdout.write(`.`);
+			process.stdout.write('.');
 
 			result.measurements.push(await getMeasurements(page, keys));
 
 		}
 	}
 
-	process.stdout.write(`\n\n`);
+	process.stdout.write('\n\n');
 
 	return result;
 

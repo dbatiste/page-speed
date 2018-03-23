@@ -9,7 +9,7 @@ const fs = require('fs');
 
 const argv = require('yargs')
 	.usage('Usage: $0 --user=[user] --pwd=[password]')
-	.option('applicationKey', { default: undefined, string: true, describe: 'Key for application'} )
+	.option('applicationKey', {default: undefined, string: true, describe: 'Key for application'})
 	.option('caching', {default: undefined, boolean: true, describe: 'Whether to enable caching'})
 	.option('headless', {default: undefined, boolean: true, describe: 'Whether to run headless'})
 	.option('samplesPerTarget', {default: undefined, number: true, describe: 'Number of times to measure each page'})
@@ -30,7 +30,7 @@ config.applicationKey = helpers.getConfigValue(argv.applicationKey, config.appli
 config.caching = helpers.getConfigValue(argv.caching, config.caching, true);
 config.headless = helpers.getConfigValue(argv.headless, config.headless, true);
 config.samplesPerTarget = helpers.getConfigValue(argv.samplesPerTarget, config.samplesPerTarget, 10);
-config.measurements = helpers.getConfigValue(argv.measurements, config.measurements, ["first-paint", "first-contentful-paint"]);
+config.measurements = helpers.getConfigValue(argv.measurements, config.measurements, ['first-paint', 'first-contentful-paint']);
 config.properties = helpers.getConfigValue(argv.properties, config.properties, []);
 config.targetSite = helpers.getConfigValue(argv.targetSite, config.targetSite, '');
 config.targets = helpers.getConfigValue(argv.targets, config.targets, []);
@@ -44,7 +44,7 @@ if (!fs.existsSync(folderPath)) {
 const filePath = `${folderPath}/${helpers.getTimestamp('-', '.')}.json`;
 
 (async() => {
-	process.stdout.write(`\nLaunching browser... `);
+	process.stdout.write('\nLaunching browser... ');
 	const browser = await puppeteer.launch({headless: config.headless});
 	const page = await browser.newPage();
 	await page.setCacheEnabled(config.caching);
