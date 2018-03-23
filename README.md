@@ -61,7 +61,6 @@ Need to extract your own measurements?  No problem, as long as your custom measu
 Note: if your measurement name ends with a `*`, the extractor will look for any measures that match, but it won't wait for them beyond page load. If there is a specific measure that may be delayed, list is explicitly.
 ```json
 module.exports = {
-  ...
   "measurements": ["yourapp.some-measure", "yourapp.*"]
 };
 ```
@@ -70,11 +69,10 @@ module.exports = {
 Need to extract properties (besides the built-in ones) to go with your data? Custom properties providers can be specified as shown below, and the value will be includes in the output properties. The provider may be `async` if needed.
 ```json
 module.exports = {
-  ...
-	"properties": [
-		"app-version",
-		"polymer",
-		{"key": "custom", "provider": () => {return SomethingOtherFramework.version;}}
-	]
+  "properties": [
+    "app-version",
+    "polymer",
+    {"key": "custom", "provider": () => {return SomethingOtherFramework.version;}}
+  ]
 };
 ```
