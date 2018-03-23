@@ -29,7 +29,12 @@ const options = {
 };
 
 const targets = argv.targets;
-const filePath = 'data/' + helpers.getTimestamp('-', '.') + '.json';
+
+const folderPath = 'data';
+if (!fs.existsSync(folderPath)) {
+	fs.mkdirSync(folderPath);
+}
+const filePath = `${folderPath}/${helpers.getTimestamp('-', '.')}.json`;
 
 (async() => {
 	process.stdout.write(`\nLaunching browser... `);
