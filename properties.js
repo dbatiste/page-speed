@@ -25,8 +25,14 @@ const getProviders = (keys) => {
 	const providers = [];
 	if (keys) {
 		for(let i=0; i<keys.length; i++) {
-			if (builtinProviders[keys[i]]) {
-				providers.push({key: keys[i], provider: builtinProviders[keys[i]]});
+			if (typeof keys[i] === 'object') {
+				if (keys[i].hasOwnProperty('key') && keys[i].hasOwnProperty('provider')) {
+					providers.push({key: keys[i].key, provider: keys[i].provider});
+				}
+			} else {
+				if (builtinProviders[keys[i]]) {
+					providers.push({key: keys[i], provider: builtinProviders[keys[i]]});
+				}
 			}
 		}
 	}
