@@ -72,7 +72,7 @@ module.exports = {
   "properties": [
     "app-version",
     "polymer",
-    {"key": "some-other-version", "provider": () => {return SomethingOtherFramework.version;}}
+    {"key": "some-other-version", "provider": () => {return SomeOtherFramework.version;}}
   ]
 };
 ```
