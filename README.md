@@ -67,7 +67,7 @@ module.exports = {
 ### Custom Properties
 
 Need to extract properties (besides the built-in ones) to go with your data? Custom properties providers can be specified as shown below, and the value will be includes in the output properties. The provider may be `async` if needed.
-```json
+```js
 module.exports = {
   "properties": [
     "app-version",
