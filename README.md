@@ -78,21 +78,21 @@ module.exports = {
 };
 ```
 
-### upload
+### Upload
 
 Optionally automatically upload results to your favorite S3 bucket via configuration.
 ```json
 module.exports = {
-	"upload": {
-		"endPoint": {
-			"key": "S3",
-			"target": "some.bucket/some-folder",
-			"region": "us-east-1",
-			"accessKeyId": "",
-			"secretAccessKey": ""
-		}
-	}
+  "upload": {
+    "endPoint": {
+      "key": "S3",
+      "target": "some.bucket/some-folder",
+      "region": "us-east-1",
+      "accessKeyId": "",
+      "secretAccessKey": ""
+    }
+}
 };
 ```
 
-'''Note: keep your secret keys secret!'''
+**Note: keep your secret keys secret!**
