@@ -41,7 +41,8 @@ const folderPath = `${wd}/data`;
 if (!fs.existsSync(folderPath)) {
 	fs.mkdirSync(folderPath);
 }
-const filePath = `${folderPath}/${helpers.getTimestamp('-', '.')}.json`;
+const fileName = `${helpers.getTimestamp('-', '.')}.json`;
+const filePath = `${folderPath}/${fileName}`;
 
 (async() => {
 	process.stdout.write('\nLaunching browser... ');
@@ -67,6 +68,19 @@ const filePath = `${folderPath}/${helpers.getTimestamp('-', '.')}.json`;
 		result.measurements = processor.evaluate(result.measurements);
 		fs.appendFileSync(filePath, JSON.stringify(result) + '\n');
 
+	}
+
+	let uploadHandler, uploadCreds;
+	if (config.upload && config.upload.endPoint && config.upload.endPoint.key === 'S3') {
+		uploadHandler = require('./s3-upload.js');
+		uploadCreds = {
+			accessKeyId: config.upload.endPoint.accessKeyId,
+			secretAccessKey: config.upload.endPoint.secretAccessKey
+		};
+	}
+
+	if (uploadHandler) {
+		await uploadHandler.upload(filePath, config.upload.endPoint, uploadCreds);
 	}
 
 	await browser.close();

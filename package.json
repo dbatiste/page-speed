@@ -11,14 +11,15 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "aws-sdk": "^2.213.1",
     "chalk": "^2.3.2",
-    "eslint-plugin-html": "^4.0.2",
     "mathjs": "^4.0.0",
     "puppeteer": "^1.2.0",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
     "eslint": "^4.18.2",
-    "eslint-config-brightspace": "^0.4.0"
+    "eslint-config-brightspace": "^0.4.0",
+    "eslint-plugin-html": "^4.0.2"
   }
 }
