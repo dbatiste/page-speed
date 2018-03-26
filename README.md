@@ -64,6 +64,7 @@ module.exports = {
   "measurements": ["yourapp.some-measure", "yourapp.*"]
 };
 ```
+
 ### Custom Properties
 
 Need to extract properties (besides the built-in ones) to go with your data? Custom properties providers can be specified as shown below, and the value will be included in the output properties. The provider may be `async` if needed.
@@ -76,3 +77,22 @@ module.exports = {
   ]
 };
 ```
+
+### upload
+
+Optionally automatically upload results to your favorite S3 bucket via configuration.
+```json
+module.exports = {
+	"upload": {
+		"endPoint": {
+			"key": "S3",
+			"target": "some.bucket/some-folder",
+			"region": "us-east-1",
+			"accessKeyId": "",
+			"secretAccessKey": ""
+		}
+	}
+};
+```
+
+'''Note: keep your secret keys secret!'''
