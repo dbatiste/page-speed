@@ -115,9 +115,9 @@ const measure = async(page, url, keys, config) => {
 
 		await page.goto(url, {waitUntil: ['networkidle2', 'load']});
 
-		if (login.isLoginPage(page.url())) {
+		if (login.isLoginPage(page.url(), config.target.login)) {
 
-			await login.login(page, config.user, config.pwd);
+			await login.login(page, config.target.login);
 
 		} else {
 

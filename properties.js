@@ -13,8 +13,8 @@ const builtinProviders = {
 const getProperty = async(page, url, provider, config) => {
 	if (page.url() !== url) {
 		await page.goto(url, {waitUntil: ['networkidle2', 'load']});
-		if (login.isLoginPage(page.url())) {
-			await login.login(page, config.user, config.pwd);
+		if (login.isLoginPage(page.url(), config.target.login)) {
+			await login.login(page, config.target.login);
 			await page.goto(url, {waitUntil: ['networkidle2', 'load']});
 		}
 	}

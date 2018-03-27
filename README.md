@@ -12,20 +12,28 @@ npm i -g
 ### Basic Setup
 
 Provide some input, such as `perf.config.js`:
-```json
+```js
 module.exports = {
-  "applicationKey": "your-friendly-app",
+  "applicationKey": "your-app",
   "caching": true,
   "headless": false,
   "samplesPerTarget": 10,
   "measurements": ["first-paint", "first-contentful-paint"],
-  "properties": ["app-version","polymer"],
-  "targetSite": "https://yourapp.com",
-  "targets": [
-    {"name": "target1", "url": "/some-relative-url-1"},
-    {"name": "target2", "url": "/some-relative-url-2"},
-    {"name": "target3", "url": "/some-relative-url-3"}
-  ]
+  "properties": ["polymer"],
+  "target": {
+    "site": "https://yourapp.com",
+    "login": {
+      "url": "/login",
+      "user": {"selector": "#userName", "value": "test-user"},
+      "password": {"selector": "#password", "value": "test-password"},
+      "submit": {"selector": "#loginButton"}
+    },
+    "targets": [
+      {"name": "target1", "url": "/some-relative-url-1"},
+      {"name": "target2", "url": "/some-relative-url-2"},
+      {"name": "target3", "url": "/some-relative-url-3"}
+    ]
+  }
 };
 ```
 
@@ -37,14 +45,13 @@ measure --user some-user --pwd some-password --configjs perf.config.js
 to produce some metrics in JSON format for each target like this:
 ```json
 {
-  "application-key":"your-friendly-app",
+  "application-key":"your-app",
   "target-site":"https://yourapp.com",
   "target-url":"/some-relative-url-1",
   "target-name":"target1",
   "caching":true,
   "timestamp":"2018-03-23 15:47:56.182",
   "properties":[
-    {"name":"app-version","value":"10.8.1"},
     {"name":"polymer","value":"2.5.0"}
   ],
   "measurements":[
@@ -52,6 +59,38 @@ to produce some metrics in JSON format for each target like this:
     {"name":"first-contentful-paint","value":940}
   ]
 }
+```
+
+### Login Info
+
+The login page info (url, user & password selectors and values, and submit button selector) can be configured.
+
+```js
+module.exports = {
+  "target": {
+    "login": {
+      "url": "/login",
+      "user": {"selector": "#userName", "value": "test-user"},
+      "password": {"selector": "#password", "value": "test-password"},
+      "submit": {"selector": "#loginButton"}
+    }
+  }
+};
+```
+
+Alternatively, the user and password can be specified as environment variables.
+
+```js
+module.exports = {
+  "target": {
+    "login": {
+      "url": "/login",
+      "user": {"selector": "#userName", "envVar": "TEST-USER-VAR"},
+      "password": {"selector": "#password", "envVar": "TEST-PASSWORD-VAR"},
+      "submit": {"selector": "#loginButton"}
+    }
+  }
+};
 ```
 
 ### Custom Measurements
@@ -81,18 +120,32 @@ module.exports = {
 ### Upload
 
 Optionally automatically upload results to your favorite S3 bucket via configuration.
-```json
+```js
 module.exports = {
   "upload": {
-    "endPoint": {
-      "key": "S3",
-      "target": "some.bucket/some-folder",
-      "region": "us-east-1",
-      "accessKeyId": "",
-      "secretAccessKey": ""
+    "key": "S3",
+    "target": "some.bucket/some-folder",
+    "region": "us-east-1",
+    "creds": {
+      "accessKeyId": "some-id",
+      "secretAccessKey": "some-secret-key"
     }
-}
+  }
+};
+```
+Or using environment variables...
+```js
+module.exports = {
+  "upload": {
+    "key": "S3",
+    "target": "some.bucket/some-folder",
+    "region": "us-east-1",
+    "creds": {
+      "accessKeyIdVar": "SOME-ID-VAR",
+      "secretAccessKeyVar": "SOME-SECRET-KEY-VAR"
+    }
+  }
 };
 ```
 
-**Note: keep your secret keys secret!**
+'''Note: keep your secret keys secret!'''

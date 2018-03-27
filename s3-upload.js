@@ -6,20 +6,20 @@ const path = require('path');
 
 const uploadHelper = {
 
-	upload: async(filePath, endPoint, creds) => {
+	upload: async(filePath, config) => {
 
-		process.stdout.write(`\nUploading to ${endPoint.target} (${endPoint.region})...`);
+		process.stdout.write(`\nUploading to ${config.target} (${config.region})...`);
 
 		const uploadPromise = new Promise((resolve, reject) => {
 
 			const s3 = new AWS.S3({
 				apiVersion: 'latest',
-				accessKeyId: creds.accessKeyId,
-				secretAccessKey: creds.secretAccessKey,
-				region: endPoint.region
+				accessKeyId: config.creds.accessKeyId || process.env[config.creds.accessKeyIdVar],
+				secretAccessKey: config.creds.secretAccessKey || process.env[config.creds.secretAccessKeyVar],
+				region: config.region
 			});
 
-			const params = {Bucket: endPoint.target, Key: '', Body: ''};
+			const params = {Bucket: config.target, Key: '', Body: ''};
 			const fileStream = fs.createReadStream(filePath);
 
 			fileStream.on('error', function(err) {

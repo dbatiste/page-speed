@@ -5,6 +5,7 @@ const measure = require('./measure.js');
 const getProperties = require('./properties.js');
 const processor = require('./processor.js');
 const helpers = require('./helpers.js');
+const configHelper = require('./config.js');
 const fs = require('fs');
 
 const argv = require('yargs')
@@ -13,29 +14,14 @@ const argv = require('yargs')
 	.option('caching', {default: undefined, boolean: true, describe: 'Whether to enable caching'})
 	.option('headless', {default: undefined, boolean: true, describe: 'Whether to run headless'})
 	.option('samplesPerTarget', {default: undefined, number: true, describe: 'Number of times to measure each page'})
-	.option('measurements', {array: true, describe: 'Measurements to extract from targets'})
-	.option('properties', {array: true, describe: 'Properties to extract from targets'})
 	.option('targetSite', {describe: 'Target site to measure targets'})
-	.option('targets', {array: true, describe: 'Targets to measure'})
 	.option('user', {describe: 'Username to login'})
 	.option('pwd', {describe: 'Password to login'})
 	.option('configjs', {describe: 'Configuration JS module'})
-	.demandOption(['user', 'pwd'])
 	.argv;
 
 const wd = process.cwd();
-const config = require(`${wd}/${argv.configjs}`);
-
-config.applicationKey = helpers.getConfigValue(argv.applicationKey, config.applicationKey, '');
-config.caching = helpers.getConfigValue(argv.caching, config.caching, true);
-config.headless = helpers.getConfigValue(argv.headless, config.headless, true);
-config.samplesPerTarget = helpers.getConfigValue(argv.samplesPerTarget, config.samplesPerTarget, 10);
-config.measurements = helpers.getConfigValue(argv.measurements, config.measurements, ['first-paint', 'first-contentful-paint']);
-config.properties = helpers.getConfigValue(argv.properties, config.properties, []);
-config.targetSite = helpers.getConfigValue(argv.targetSite, config.targetSite, '');
-config.targets = helpers.getConfigValue(argv.targets, config.targets, []);
-config.user = helpers.getConfigValue(argv.user, config.user, '');
-config.pwd = helpers.getConfigValue(argv.pwd, config.pwd, '');
+const config = configHelper.getConfig(argv, require(`${wd}/${argv.configjs}`));
 
 const folderPath = `${wd}/data`;
 if (!fs.existsSync(folderPath)) {
@@ -53,16 +39,16 @@ const filePath = `${folderPath}/${fileName}`;
 
 	process.stdout.write(await browser.version());
 
-	for (let i = 0; i < config.targets.length; i++) {
+	for (let i = 0; i < config.target.targets.length; i++) {
 
-		let result = await measure(page, config.targetSite + config.targets[i].url, config.measurements, config);
+		let result = await measure(page, config.target.site + config.target.targets[i].url, config.measurements, config);
 
 		result = helpers.merge({
 			'application-key': config.applicationKey,
-			'target-site': config.targetSite,
-			'target-url': config.targets[i].url,
-			'target-name': config.targets[i].name,
-			'properties': await getProperties(page, config.targetSite + config.targets[i].url, config.properties, config)
+			'target-site': config.target.site,
+			'target-url': config.target.targets[i].url,
+			'target-name': config.target.targets[i].name,
+			'properties': await getProperties(page, config.target.site + config.target.targets[i].url, config.properties, config)
 		}, result);
 
 		result.measurements = processor.evaluate(result.measurements);
@@ -71,16 +57,12 @@ const filePath = `${folderPath}/${fileName}`;
 	}
 
 	let uploadHandler, uploadCreds;
-	if (config.upload && config.upload.endPoint && config.upload.endPoint.key === 'S3') {
+	if (config.upload && config.upload.key === 'S3' && config.upload.target) {
 		uploadHandler = require('./s3-upload.js');
-		uploadCreds = {
-			accessKeyId: config.upload.endPoint.accessKeyId,
-			secretAccessKey: config.upload.endPoint.secretAccessKey
-		};
 	}
 
 	if (uploadHandler) {
-		await uploadHandler.upload(filePath, config.upload.endPoint, uploadCreds);
+		await uploadHandler.upload(filePath, config.upload);
 	}
 
 	await browser.close();
