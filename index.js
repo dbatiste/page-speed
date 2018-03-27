@@ -37,7 +37,8 @@ const filePath = `${folderPath}/${fileName}`;
 	await page.setCacheEnabled(config.caching);
 	await page.setViewport({width: 1024, height: 768});
 
-	process.stdout.write(await browser.version());
+	const browserVersion = await browser.version();
+	process.stdout.write(browserVersion);
 
 	for (let i = 0; i < config.target.targets.length; i++) {
 
@@ -48,7 +49,8 @@ const filePath = `${folderPath}/${fileName}`;
 			'target-site': config.target.site,
 			'target-url': config.target.targets[i].url,
 			'target-name': config.target.targets[i].name,
-			'properties': await getProperties(page, config.target.site + config.target.targets[i].url, config.properties, config)
+			'properties': await getProperties(page, config.target.site + config.target.targets[i].url, config.properties, config),
+			'browser': browserVersion
 		}, result);
 
 		result.measurements = processor.evaluate(result.measurements);
