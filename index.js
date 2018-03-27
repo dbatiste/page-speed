@@ -56,7 +56,7 @@ const filePath = `${folderPath}/${fileName}`;
 
 	}
 
-	let uploadHandler, uploadCreds;
+	let uploadHandler;
 	if (config.upload && config.upload.key === 'S3' && config.upload.target) {
 		uploadHandler = require('./s3-upload.js');
 	}
